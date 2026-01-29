@@ -34,7 +34,7 @@ public extension View {
                             .environment(\.toastManager, manager)
                     }
                 }
-                .allowsHitTesting(false)
+                .allowsHitTesting(configuration.allowsHitTesting)
                 .ignoresSafeArea()
             )
             .onAppear {

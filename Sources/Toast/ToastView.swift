@@ -296,7 +296,7 @@ public struct ToastContainerView: View {
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignmentForPosition(position))
             .padding(edgeInsetsForPosition(position))
-            .allowsHitTesting(true)
+            .allowsHitTesting(configuration.allowsHitTesting)
         }
     }
     

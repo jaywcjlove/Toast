@@ -102,10 +102,10 @@ public struct Toast {
     
     @MainActor
     public static func custom<Content: View>(
-        @ViewBuilder content: () -> Content,
         id: String = UUID().uuidString,
         duration: TimeInterval? = nil,
-        position: ToastPosition = .topRight
+        position: ToastPosition = .topRight,
+        @ViewBuilder content: () -> Content
     ) {
         ToastManager.shared.custom(
             content: content,

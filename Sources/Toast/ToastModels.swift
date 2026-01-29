@@ -156,6 +156,7 @@ public struct ToastConfiguration: Sendable {
     public var containerStyle: ToastStyle
     public var enablePushAnimation: Bool
     public var animationDuration: TimeInterval
+    public var allowsHitTesting: Bool
     
     public init(
         position: ToastPosition = .topRight,
@@ -169,7 +170,8 @@ public struct ToastConfiguration: Sendable {
         theme: ToastTheme = .system,
         containerStyle: ToastStyle = .default,
         enablePushAnimation: Bool = true,
-        animationDuration: TimeInterval = 0.5
+        animationDuration: TimeInterval = 0.5,
+        allowsHitTesting: Bool = true
     ) {
         self.position = position
         self.duration = duration
@@ -183,6 +185,7 @@ public struct ToastConfiguration: Sendable {
         self.containerStyle = containerStyle
         self.enablePushAnimation = enablePushAnimation
         self.animationDuration = animationDuration
+        self.allowsHitTesting = allowsHitTesting
     }
     
     public static let `default` = ToastConfiguration()
