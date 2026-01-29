@@ -35,6 +35,7 @@ public extension View {
                     }
                 }
                 .allowsHitTesting(false)
+                .ignoresSafeArea()
             )
             .onAppear {
                 Task { @MainActor in

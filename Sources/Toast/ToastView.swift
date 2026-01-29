@@ -122,7 +122,7 @@ public struct ToastView: View {
             progressBar,
             alignment: .bottom
         )
-        .frame(maxWidth: 400)
+        .frame(maxWidth: 300)
     }
     
     @ViewBuilder

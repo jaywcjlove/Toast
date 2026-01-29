@@ -42,7 +42,7 @@ A lightweight SwiftUI toast notification system inspired by [react-hot-toast](ht
 
 ## ✨ Features
 
-- 🎯 **Simple API** - Clean, intuitive interface: `toast.success("Hello!")`
+- 🎯 **Simple API** - Clean, intuitive interface: `Toast.success("Hello!")`
 - ⚡ **High Performance** - Smooth animations and optimized memory usage
 - 📍 **Flexible Positioning** - Multiple positioning options (top, bottom, center)
 - 🎨 **Customizable** - Theming, styling, and configuration support
@@ -84,14 +84,34 @@ struct MyApp: App {
 ```swift
 import Toast
 
-// Simple notifications
-toast.success("Operation completed!")
-toast.error("Something went wrong")
-toast.info("Just so you know")
-toast.loading("Processing...")
-
-// Dismiss toasts
-toast.dismissAll()
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            Button("Success") {
+                // Static API (recommended)
+                Toast.success("Operation completed!")
+            }
+            
+            Button("Error") {
+                Toast.error("Something went wrong")
+            }
+            
+            Button("Info") {
+                Toast.info("Just so you know")
+            }
+            
+            Button("Loading") {
+                Toast.loading("Processing...")
+            }
+            
+            Button("Clear") {
+                Toast.dismissAll()
+            }
+        }
+        .toast() // Enable toast container
+    }
+}
+```
 ```
 
 ## 📚 API Reference
@@ -99,13 +119,13 @@ toast.dismissAll()
 ### Basic Messages
 
 ```swift
-// Simple API (recommended)
-toast.success("Success message")
-toast.error("Error message") 
-toast.info("Info message")
-toast.loading("Loading message")
+// Method 1: Static API (works everywhere)
+Toast.success("Success message")
+Toast.error("Error message") 
+Toast.info("Info message")
+Toast.loading("Loading message")
 
-// Full API
+// Method 2: Full API (advanced usage)
 ToastManager.shared.success("Success!")
 ToastManager.shared.error("Error occurred")
 ToastManager.shared.info("Information")
@@ -116,20 +136,20 @@ ToastManager.shared.loading("Loading...")
 
 ```swift
 // Available positions
-toast.success("Message", position: .topLeft)
-toast.info("Message", position: .topCenter)     // default
-toast.error("Message", position: .topRight)
-toast.success("Message", position: .bottomLeft)
-toast.info("Message", position: .bottomCenter)
-toast.error("Message", position: .bottomRight)
-toast.loading("Message", position: .center)
+Toast.success("Message", position: .topLeft)
+Toast.info("Message", position: .topCenter)     // default
+Toast.error("Message", position: .topRight)
+Toast.success("Message", position: .bottomLeft)
+Toast.info("Message", position: .bottomCenter)
+Toast.error("Message", position: .bottomRight)
+Toast.loading("Message", position: .center)
 ```
 
 ### Custom Toasts
 
 ```swift
 // Custom SwiftUI content
-toast.custom {
+Toast.custom {
     HStack {
         Image(systemName: "star.fill")
             .foregroundColor(.yellow)
@@ -148,10 +168,10 @@ toast.custom {
 Automatic async operation state handling:
 
 ```swift
-toast.promise(
+Toast.promise(
     operation: {
         // Your async operation
-        try await uploadFile()
+        try await Task.sleep(for: .seconds(2))
         return "Upload completed"
     },
     messages: .init(
@@ -170,17 +190,24 @@ ToastManager.shared.configuration.duration = 5.0
 ToastManager.shared.configuration.position = .topCenter
 
 // Per-toast configuration
-toast.success("Custom duration", duration: 8.0)
-toast.info("Manual dismiss", duration: 0) // Never auto-dismiss
+// ⚠️ Static API doesn't support duration parameter
+// Use ToastManager for custom duration:
+ToastManager.shared.success("Custom duration", duration: 8.0)
+ToastManager.shared.info("Manual dismiss", duration: 0) // Never auto-dismiss
 ```
 
 ### Control Methods
 
 ```swift
 // Dismiss toasts
-toast.dismiss()         // Dismiss latest toast
-toast.dismissAll()      // Dismiss all toasts
-toast.dismiss(id: "specific-id") // Dismiss by ID
+Toast.dismiss()         // Dismiss latest toast
+Toast.dismissAll()      // Dismiss all toasts
+
+// For ID-specific operations, use ToastManager:
+ToastManager.shared.info("Loading...", id: "specific-id")
+DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+    Toast.dismiss(id: "specific-id") // Dismiss by ID
+}
 ```
 
 ## 📋 Complete Example
@@ -201,29 +228,29 @@ struct ContentView: View {
             HStack {
                 Button("Success") {
                     counter += 1
-                    toast.success("Success #\(counter)")
+                    Toast.success("Success #\(counter)")
                 }
                 
                 Button("Error") {
-                    toast.error("Something went wrong")
+                    Toast.error("Something went wrong")
                 }
                 
                 Button("Info") {
-                    toast.info("Information message")
+                    Toast.info("Information message")
                 }
             }
             
             // Loading and promise
             Button("Loading") {
-                toast.loading("Processing...")
+                Toast.loading("Processing...")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    toast.success("Done!")
+                    Toast.success("Done!")
                 }
             }
             
             // Async promise
             Button("Async Task") {
-                toast.promise(
+                Toast.promise(
                     operation: {
                         try await Task.sleep(for: .seconds(2))
                         return "Task completed"
@@ -238,7 +265,7 @@ struct ContentView: View {
             
             // Custom toast
             Button("Custom") {
-                toast.custom {
+                Toast.custom {
                     HStack {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
@@ -253,12 +280,55 @@ struct ContentView: View {
             
             // Clear all
             Button("Clear All") {
-                toast.dismissAll()
+                Toast.dismissAll()
             }
             .foregroundColor(.red)
         }
         .padding()
         .toast() // Enable toast container
+    }
+}
+```
+
+## 🔧 Troubleshooting
+
+### "Use of 'toast' refers to instance method" Error
+
+This error occurs due to naming conflict between the global `toast` instance and the `.toast()` modifier method.
+
+❌ **Problem:**
+```swift
+struct MyView: View {
+    var body: some View {
+        Button("Test") {
+            toast.success("Hello") // Error: naming conflict
+        }
+        .toast() // This creates the conflict
+    }
+}
+```
+
+✅ **Solution (Recommended):**
+
+**Use Static API (always works)**
+```swift
+Button("Test") {
+    Toast.success("Hello") // ✅ Always reliable
+}
+```
+
+**Alternative Solutions:**
+```swift
+// Method 1: ToastManager directly
+Button("Test") {
+    ToastManager.shared.success("Hello") // ✅ Always works
+}
+
+// Method 2: Only in completely separate contexts
+class SomeService {
+    func performAction() {
+        // ✅ Works in non-SwiftUI contexts
+        toast.success("Service action completed")
     }
 }
 ```
