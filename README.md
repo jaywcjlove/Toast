@@ -112,7 +112,6 @@ struct ContentView: View {
     }
 }
 ```
-```
 
 ## 📚 API Reference
 
