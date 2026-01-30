@@ -40,6 +40,8 @@ Toast
 
 A lightweight SwiftUI toast notification system inspired by [react-hot-toast](https://github.com/timolins/react-hot-toast), designed for simple and elegant user notifications.
 
+![Toast](https://github.com/user-attachments/assets/22daa265-8c8a-4522-a0fc-9160b5cc3c6f)
+
 ## ✨ Features
 
 - 🎯 **Simple API** - Clean, intuitive interface: `Toast.success("Hello!")`
