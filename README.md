@@ -115,7 +115,7 @@ struct ContentView: View {
 }
 ```
 
-## 📚 API Reference
+## API Reference
 
 ### Basic Messages
 
@@ -211,7 +211,7 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
 }
 ```
 
-## 📋 Complete Example
+## Complete Example
 
 ```swift
 import SwiftUI
@@ -291,7 +291,7 @@ struct ContentView: View {
 }
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### "Use of 'toast' refers to instance method" Error
 
@@ -334,7 +334,7 @@ class SomeService {
 }
 ```
 
-## ⚙️ Configuration Options
+## Configuration Options
 
 ```swift
 struct ToastConfiguration {
