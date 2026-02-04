@@ -143,8 +143,11 @@ public final class ToastManager {
             if let index = toasts.firstIndex(where: { $0.id == id }) {
                 let toast = toasts[index]
                 
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    toast.isVisible = false
+                // 使用 Task 来避免在视图更新期间发布更改
+                Task { @MainActor in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        toast.isVisible = false
+                    }
                 }
                 
                 // 从位置列表中移除
@@ -168,20 +171,19 @@ public final class ToastManager {
     public func dismissAll() {
         let allToasts = toasts
         
-        for toast in allToasts {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                toast.isVisible = false
+        // 使用 Task 来避免在视图更新期间发布更改
+        Task { @MainActor in
+            for toast in allToasts {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    toast.isVisible = false
+                }
+                
+                toast.onDismiss?()
             }
             
-            toast.onDismiss?()
-        }
-        
-        // 清空所有位置组
-        Task {
+            // 清空所有位置组
             try await Task.sleep(for: .seconds(0.3))
-            await MainActor.run {
-                self.toastsByPosition.removeAll()
-            }
+            self.toastsByPosition.removeAll()
         }
     }
     
